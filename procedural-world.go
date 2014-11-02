@@ -5,6 +5,7 @@ import (
 	term "github.com/buger/goterm"
 	"math/rand"
 	"time"
+	"flag"
 )
 
 type Tile int64
@@ -185,8 +186,24 @@ func GenWorld(nLayers int, width int, height int, seed *WorldSeed) *World {
 
 func main() {
 	var world *World
-	seed := WorldSeed{TILE_GRASS: 110, TILE_DIRT: 80, TILE_LAVA: 1, TILE_WATER: 30,TILE_EMPTY: 0}
-	world = GenWorld(1, 100, 50, &seed)
-	worldBigger := world.Scale(2);
-	RenderMap("lbha", worldBigger)
+	width := flag.Int("width", 50, "width of world")
+	height := flag.Int("height", 100, "height of world")
+	grass := flag.Int("grass", 10, "weight of grass tiles")
+	dirt := flag.Int("dirt", 16, "weight of dirt tiles")
+	lava := flag.Int("lava", 1, "weight of lava tiles")
+	water := flag.Int("water", 2, "weight of water tiles")
+	generateImage := flag.Bool("image", false, "create an image")
+	fileName := flag.String("image-name", "out", "weight of wate")
+
+	flag.Parse()
+
+	seed := WorldSeed{TILE_GRASS: *grass, TILE_DIRT: *dirt, TILE_LAVA: *lava, TILE_WATER: *water}
+	world = GenWorld(1, *width, *height, &seed)
+
+	if *generateImage == true {
+		worldBigger := world.Scale(2);
+		RenderMap(*fileName, worldBigger)
+	} else {
+		fmt.Print(world)
+	}
 }
