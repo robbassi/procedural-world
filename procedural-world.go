@@ -1,18 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	term "github.com/buger/goterm"
 	"math/rand"
 	"time"
-	"flag"
 )
 
 type Tile int64
 
 const (
-	WORLD_X = 200
-	WORLD_Y = 200
+	WORLD_X     = 200
+	WORLD_Y     = 200
 	WORLD_SCALE = 2
 )
 const (
@@ -30,7 +30,7 @@ type Layer []TileRow
 type Layers []Layer
 type World struct {
 	Layers Layers
-	Width int
+	Width  int
 	Height int
 }
 
@@ -55,7 +55,7 @@ func (tr TileRow) String() string {
 	row := ""
 	for _, tile := range tr {
 		for i := 0; i < WORLD_SCALE; i++ {
-			row += tile.String() 
+			row += tile.String()
 		}
 	}
 	return row
@@ -72,34 +72,34 @@ func (l Layer) String() string {
 }
 
 func (l Layer) IsTile(x, y int, tile Tile) bool {
-	
-	if ((x >= 0 && y >= 0) && y < len(l)) {
+
+	if (x >= 0 && y >= 0) && y < len(l) {
 		if x < len(l[y]) {
-			return l[y][x] & tile != 0
+			return l[y][x]&tile != 0
 		}
 	}
-	return false;
+	return false
 }
 
 func (l Layer) ClosestLand(x, y int) Tile {
-	if l.IsTile(x,y,TILE_LAND) {
+	if l.IsTile(x, y, TILE_LAND) {
 		return l[y][x]
 	} else {
-		if l.IsTile(x-1,y, TILE_LAND) {
+		if l.IsTile(x-1, y, TILE_LAND) {
 			return l[y][x-1]
-		} else if l.IsTile(x,y-1, TILE_LAND) {
+		} else if l.IsTile(x, y-1, TILE_LAND) {
 			return l[y-1][x]
-		} else if l.IsTile(x-1,y-1, TILE_LAND) {
+		} else if l.IsTile(x-1, y-1, TILE_LAND) {
 			return l[y-1][x-1]
-		} else if l.IsTile(x+1,y, TILE_LAND) {
+		} else if l.IsTile(x+1, y, TILE_LAND) {
 			return l[y][x+1]
-		} else if l.IsTile(x,y+1, TILE_LAND) {
+		} else if l.IsTile(x, y+1, TILE_LAND) {
 			return l[y+1][x]
-		} else if l.IsTile(x+1,y+1, TILE_LAND) {
+		} else if l.IsTile(x+1, y+1, TILE_LAND) {
 			return l[y+1][x+1]
-		} else if l.IsTile(x-1,y+1, TILE_LAND) {
+		} else if l.IsTile(x-1, y+1, TILE_LAND) {
 			return l[y+1][x-1]
-		} else if l.IsTile(x+1,y-1, TILE_LAND) {
+		} else if l.IsTile(x+1, y-1, TILE_LAND) {
 			return l[y-1][x+1]
 		} else {
 			return TILE_EMPTY
@@ -201,7 +201,7 @@ func main() {
 	world = GenWorld(1, *width, *height, &seed)
 
 	if *generateImage == true {
-		worldBigger := world.Scale(2);
+		worldBigger := world.Scale(2)
 		RenderMap(*fileName, worldBigger)
 	} else {
 		fmt.Print(world)
