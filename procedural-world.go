@@ -193,7 +193,7 @@ func main() {
 	lava := flag.Int("lava", 1, "weight of lava tiles")
 	water := flag.Int("water", 2, "weight of water tiles")
 	generateImage := flag.Bool("image", false, "create an image")
-	fileName := flag.String("image-name", "out", "weight of wate")
+	fileName := flag.String("image-name", "out", "name of image file")
 
 	flag.Parse()
 
