@@ -146,12 +146,10 @@ type WorldSeed map[Tile]int
 
 func (ws WorldSeed) NextTile() Tile {
 	rand.Seed(time.Now().UTC().UnixNano())
-
 	sum := 0
 	for _, weight := range ws {
 		sum += weight
 	}
-
 	accum := 0
 	num := rand.Intn(sum)
 	for tile, weight := range ws {
@@ -165,7 +163,19 @@ func (ws WorldSeed) NextTile() Tile {
 	return 0
 }
 
-func GenWorld(nLayers int, width int, height int, seed *WorldSeed) *World {
+func (ws WorldSeed) NextTilePerlin(x, y int) Tile {
+	noise := SmoothedNoise(x, y)
+	if noise > -0.2 {
+		if noise > 0.4 {
+			return TILE_DIRT
+		} else {
+			return TILE_GRASS
+		}
+	}
+	return TILE_WATER
+}
+
+func GenWorld(perlin bool, nLayers int, width int, height int, seed *WorldSeed) *World {
 	world := World{}
 	world.Width = width
 	world.Height = height
@@ -176,8 +186,11 @@ func GenWorld(nLayers int, width int, height int, seed *WorldSeed) *World {
 		for y := 0; y < height; y++ {
 			layers[z][y] = make(TileRow, width)
 			for x := 0; x < width; x++ {
-				tile := seed.NextTile()
-				layers[z][y][x] = tile
+				if perlin {
+					layers[z][y][x] = seed.NextTilePerlin(x, y)
+				} else {
+					layers[z][y][x] = seed.NextTile()
+				}
 			}
 		}
 	}
@@ -194,11 +207,12 @@ func main() {
 	water := flag.Int("water", 2, "weight of water tiles")
 	generateImage := flag.Bool("image", false, "create an image")
 	fileName := flag.String("image-name", "out", "name of image file")
+	usePerlin := flag.Bool("perlin", false, "use Perlin Noise to generate world")
 
 	flag.Parse()
 
 	seed := WorldSeed{TILE_GRASS: *grass, TILE_DIRT: *dirt, TILE_LAVA: *lava, TILE_WATER: *water}
-	world = GenWorld(1, *width, *height, &seed)
+	world = GenWorld(*usePerlin, 1, *width, *height, &seed)
 
 	if *generateImage == true {
 		worldBigger := world.Scale(2)

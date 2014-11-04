@@ -7,8 +7,8 @@ func Noise(x, y int) float64 {
 }
 
 func SmoothedNoise(x, y int) float64 {
-	corners := float64(( Noise(x-1, y-1)+Noise(x+1, y-1)+Noise(x-1, y+1)+Noise(x+1, y+1) )) / 16
-	sides := float64(( Noise(x-1, y)  +Noise(x+1, y)  +Noise(x, y-1)  +Noise(x, y+1) )) /  8
+	corners := float64((Noise(x-1, y-1) + Noise(x+1, y-1) + Noise(x-1, y+1) + Noise(x+1, y+1))) / 16
+	sides := float64((Noise(x-1, y) + Noise(x+1, y) + Noise(x, y-1) + Noise(x, y+1))) / 8
 	center := float64(Noise(x, y)) / 4
 	return corners + sides + center
 }
