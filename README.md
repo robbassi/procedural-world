@@ -3,8 +3,7 @@ Procedural World Generator
 
 WIP
 
-Produces a randomly generated terran. Currently is not very intelligent, here is a brief todo list:
-
+Produces a randomly generated terrain. Here is a brief todo list:
 - Lakes, rivers
 - Biomes
 - Elevation
@@ -20,5 +19,5 @@ Produces a randomly generated terran. Currently is not very intelligent, here is
           -height=100: height of world
           -image=false: create an image
           -image-name="out": name of image file
-	  -perlin=false: use Perlin Noise to generate world
+          -perlin=false: use Perlin Noise to generate world
 
